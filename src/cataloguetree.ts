@@ -2,7 +2,7 @@ import * as vscode from 'vscode';
 import * as child from 'child_process'; 
 import * as inputs from './data';
 import { pathToFileURL } from 'url';
-
+import {XMLHttpRequest} from 'xmlhttprequest';
 export class DepNodeProvider implements vscode.TreeDataProvider<Dependency> {
 	private _onDidChangeTreeData: vscode.EventEmitter<Dependency | undefined | void> = new vscode.EventEmitter<Dependency | undefined | void>();
 	//readonly onDidChangeTreeData: vscode.Event<Dependency | undefined | void> = this._onDidChangeTreeData.event;
@@ -21,28 +21,43 @@ export class DepNodeProvider implements vscode.TreeDataProvider<Dependency> {
 	getChildren(element?: Dependency): vscode.ProviderResult<Dependency[]>{
 		
 		const images:Dependency[]=[];
-		//images.push(new Dependency("","Reference Implementation","","",this.getRecipe()));
-		images.push(new Dependency("Refrerence Implementation","",[],[],[],"","","","","","","","","","","","",true,"RI",this.getRecipe()));
+		images.push(new Dependency("Refrerence Implementation","",[],[],[],"","","","","","","","","","","","",true,"RI", this.getRecipe()));
 		return element===undefined?images:element.children;
-
 	}
 	
-	public getRecipe()
+	public  getRecipe()
 	{
 		const recipe = [];
-		for( const i of inputs.clidata)
+		for( const i of this.getData())
 		{
 			if(!i.isSDK)
 			{
+				console.log(i);
 				recipe.push(new Dependency(i.label+":"+i.version,i.version,i.ingredients,i.installationIngOrder,i.displayIngOrder,i.id
 				,i.modifiedOn,i.name.en,i.displayName.en,i.recipeType,i.label,i.desc.en,i.defaultOs,i.defaultHw,i.defaultAcc,i.uiRoute,i.ircProductId,i.isSDK,"Recipe"));
 			}
 		}
 		return recipe;
 	}
+	public getData()
+	{
+		const url = `http://localhost:8080/recipe`; //A local page
+
+		const xhttp = new XMLHttpRequest();
+		xhttp.open("GET", url,false);
+		xhttp.send();
+		return JSON.parse(xhttp.responseText);
+	}
 	public async pull(item:Dependency)
 	{
-		vscode.window.showInformationMessage("ESH install "+item.ingredients);
+		console.log(`http://localhost:8080/recipe/upgrade/${item.id}?order=installation`);
+		const url = `http://localhost:8080/recipe/upgrade/${item.id}?order=installation`; //A local page
+
+		const xhttp = new XMLHttpRequest();
+		xhttp.open("GET", url, false);
+		xhttp.send(null);
+		vscode.window.showInformationMessage(xhttp.responseText);
+
 	}
 
 }
