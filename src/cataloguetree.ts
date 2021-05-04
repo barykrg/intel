@@ -32,14 +32,17 @@ export class DepNodeProvider implements vscode.TreeDataProvider<Dependency> {
 		const recipe = [];
 		for( const i of inputs.clidata)
 		{
-			recipe.push(new Dependency(i.label+" "+i.version,i.version,i.ingredients,i.installationIngOrder,i.displayIngOrder,i.id
+			if(!i.isSDK)
+			{
+				recipe.push(new Dependency(i.label+":"+i.version,i.version,i.ingredients,i.installationIngOrder,i.displayIngOrder,i.id
 				,i.modifiedOn,i.name.en,i.displayName.en,i.recipeType,i.label,i.desc.en,i.defaultOs,i.defaultHw,i.defaultAcc,i.uiRoute,i.ircProductId,i.isSDK,"Recipe"));
+			}
 		}
 		return recipe;
 	}
 	public async pull(item:Dependency)
 	{
-		return "";
+		vscode.window.showInformationMessage("ESH install "+item.ingredients);
 	}
 
 }
