@@ -1,8 +1,7 @@
 import * as vscode from 'vscode';
-import * as child from 'child_process'; 
-import * as inputs from './data';
-import { pathToFileURL } from 'url';
 import {XMLHttpRequest} from 'xmlhttprequest';
+import * as path from 'path';
+import * as fs from 'fs';
 export class DepNodeProvider implements vscode.TreeDataProvider<Dependency> {
 	private _onDidChangeTreeData: vscode.EventEmitter<Dependency | undefined | void> = new vscode.EventEmitter<Dependency | undefined | void>();
 	//readonly onDidChangeTreeData: vscode.Event<Dependency | undefined | void> = this._onDidChangeTreeData.event;
@@ -21,7 +20,7 @@ export class DepNodeProvider implements vscode.TreeDataProvider<Dependency> {
 	getChildren(element?: Dependency): vscode.ProviderResult<Dependency[]>{
 		
 		const images:Dependency[]=[];
-		images.push(new Dependency("Refrerence Implementation","",[],[],[],"","","","","","","","","","","","",true,"RI", this.getRecipe()));
+		images.push(new Dependency("Refrerence Implementation","",[],[],[],"","","","","","","","","","","","",[],true,"RI", this.getRecipe()));
 		return element===undefined?images:element.children;
 	}
 	
@@ -30,11 +29,11 @@ export class DepNodeProvider implements vscode.TreeDataProvider<Dependency> {
 		const recipe = [];
 		for( const i of this.getData())
 		{
+			//console.log(i.osIds);
 			if(!i.isSDK)
 			{
-				console.log(i);
 				recipe.push(new Dependency(i.label+":"+i.version,i.version,i.ingredients,i.installationIngOrder,i.displayIngOrder,i.id
-				,i.modifiedOn,i.name.en,i.displayName.en,i.recipeType,i.label,i.desc.en,i.defaultOs,i.defaultHw,i.defaultAcc,i.uiRoute,i.ircProductId,i.isSDK,"Recipe"));
+				,i.modifiedOn,i.name.en,i.displayName.en,i.recipeType,i.label,i.desc.en,i.defaultOs,i.defaultHw,i.defaultAcc,i.uiRoute,i.ircProductId,i.osIds,i.isSDK,"Recipe"));
 			}
 		}
 		return recipe;
@@ -48,15 +47,27 @@ export class DepNodeProvider implements vscode.TreeDataProvider<Dependency> {
 		xhttp.send();
 		return JSON.parse(xhttp.responseText);
 	}
-	public async pull(item:Dependency)
+	public pull(item:Dependency)
 	{
 		console.log(`http://localhost:8080/recipe/upgrade/${item.id}?order=installation`);
+		console.log(`http://localhost:8080/recipe/getAllByIrcId/${item.id}?osId=${item.osIds[0]}`);
 		const url = `http://localhost:8080/recipe/upgrade/${item.id}?order=installation`; //A local page
 
 		const xhttp = new XMLHttpRequest();
 		xhttp.open("GET", url, false);
 		xhttp.send(null);
-		vscode.window.showInformationMessage(xhttp.responseText);
+		//console.log(xhttp.responseText);
+		const baseDir = path.join("C://", 'Users','bbirendr','xml/');
+		const filename = `${item.label}`.replace(/\s/g,'').replace('.',"_").replace(':',"@");
+		console.log(`${baseDir}${filename}.xml`);
+		fs.writeFile(`${baseDir}${filename}.xml`, xhttp.responseText, function (err) {
+			if (err)
+			{
+				console.log(err);
+				return;
+			}
+			console.log('Saved!');
+		});
 
 	}
 
@@ -84,6 +95,7 @@ export class Dependency extends vscode.TreeItem {
 		public readonly defaultAcc: string,
 		public readonly uiRoute: string,
 		public readonly ircProductId: string,
+		public readonly osIds: string[],
 		// //isSDK
 		public readonly isSDK: boolean,
 		

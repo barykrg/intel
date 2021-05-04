@@ -69,6 +69,7 @@
 		"eslint": "^7.1.0"
 	},
 	"dependencies": {
+		"dom-parser": "^0.1.6",
 		"ftp": "^0.3.10",
 		"jsonc-parser": "^0.4.2",
 		"minimist": "^0.2.1",
