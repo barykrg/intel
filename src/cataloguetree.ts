@@ -57,16 +57,17 @@ export class DepNodeProvider implements vscode.TreeDataProvider<Dependency> {
 		xhttp.open("GET", url, false);
 		xhttp.send(null);
 		//console.log(xhttp.responseText);
-		const baseDir = path.join("C://", 'Users','bbirendr','xml/');
+		
 		const filename = `${item.label}`.replace(/\s/g,'').replace('.',"_").replace(':',"@");
-		console.log(`${baseDir}${filename}.xml`);
-		fs.writeFile(`${baseDir}${filename}.xml`, xhttp.responseText, function (err) {
+		const baseDir = path.join("\\", 'tmp',filename+".xml");
+		console.log(`${baseDir}`);
+		fs.writeFile(`${baseDir}`, xhttp.responseText, function (err) {
 			if (err)
 			{
-				console.log(err);
+				vscode.window.showErrorMessage(`${item.label} pull failed`);
 				return;
 			}
-			console.log('Saved!');
+			vscode.window.showInformationMessage(`${item.label} pull successful`);
 		});
 
 	}

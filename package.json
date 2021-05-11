@@ -30,12 +30,21 @@
 				{
 					"id": "catalog",
 					"name": "Intel Catalog"
+				},
+				{
+					"id": "oscatalog",
+					"name": "On-System Catalog"
 				}
 			]
 		},
 		"commands": [
 			{
 				"command": "intelregistry.pull",
+				"title": "Pull Details",
+				"icon": "$(cloud-download)"
+			},
+			{
+				"command": "intelregistry.ospull",
 				"title": "Pull Image",
 				"icon": "$(cloud-download)"
 			}
@@ -47,6 +56,11 @@
 				{
 					"command": "intelregistry.pull",
 					"when": "view == catalog && viewItem==Recipe",
+					"group": "inline"
+				},
+				{
+					"command": "intelregistry.ospull",
+					"when": "view == oscatalog && viewItem==OSRecipe",
 					"group": "inline"
 				}
 			]
