@@ -47,11 +47,22 @@
 				"command": "intelregistry.ospull",
 				"title": "Pull Image",
 				"icon": "$(cloud-download)"
+			},
+			{
+				"command": "intelregistry.refresh",
+				"title": "Refresh Catalog",
+				"icon": "$(refresh)"
 			}
 		],
 		"menus": {
 			"commandPalette": [],
-			"view/title": [],
+			"view/title": [
+				{
+					"command": "intelregistry.refresh",
+					"when": "view == oscatalog",
+					"group": "navigation"
+				}
+			],
 			"view/item/context": [
 				{
 					"command": "intelregistry.pull",

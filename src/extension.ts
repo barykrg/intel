@@ -16,4 +16,5 @@ export function activate(context: vscode.ExtensionContext) {
 	const oscatalogueImages = new oscataloguetree.DepNodeProvider();
 	vscode.window.createTreeView('oscatalog',{treeDataProvider:oscatalogueImages});
 	vscode.commands.registerCommand('intelregistry.ospull', (item:oscataloguetree.Dependency) => oscatalogueImages.pull(item));
+	vscode.commands.registerCommand('intelregistry.refresh', (item:oscataloguetree.Dependency) => oscatalogueImages.refresh());
 }

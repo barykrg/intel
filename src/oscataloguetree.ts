@@ -2,9 +2,9 @@ import * as vscode from 'vscode';
 import * as path from 'path';
 import * as fs from 'fs';
 export class DepNodeProvider implements vscode.TreeDataProvider<Dependency> {
-	private _onDidChangeTreeData: vscode.EventEmitter<Dependency | undefined | void> = new vscode.EventEmitter<Dependency | undefined | void>();
-	//readonly onDidChangeTreeData: vscode.Event<Dependency | undefined | void> = this._onDidChangeTreeData.event;
-	constructor() {
+  private _onDidChangeTreeData: vscode.EventEmitter<Dependency | undefined | null | void> = new vscode.EventEmitter<Dependency | undefined | null | void>();
+  readonly onDidChangeTreeData: vscode.Event<Dependency | undefined | null | void> = this._onDidChangeTreeData.event;	
+  constructor() {
 		console.log('OSTree Made');
 	}
 
@@ -29,10 +29,9 @@ export class DepNodeProvider implements vscode.TreeDataProvider<Dependency> {
 		for( const i of this.getData())
 		{
 			console.log(i);
-			if(i.endsWith('.xml'))
+			if(fs.existsSync(path.join("/tmp",i,"edgesoftware_configuration.xml")))
 			{
-				let name = i.replace(".xml","");
-				name = name.replace("@",":");
+				const name = i.replace("@",":");
 				recipe.push(new Dependency(name,'OSRecipe'));
 			}
 		}
@@ -45,7 +44,19 @@ export class DepNodeProvider implements vscode.TreeDataProvider<Dependency> {
 	public pull(item:Dependency)
 	{
 		vscode.window.showInformationMessage(`Pull ${item.label} successfull`);
-
+		const foldername = item.label;
+		const pathToXML = path.join("\\","tmp",foldername);
+		const command = cp.exec(`cd ${pathToXML} && /home/barun/test/edgesoftware install`);
+		command.on('error',(error)=>{console.log("someerror"+error);});
+		command.stderr?.on('data',(data)=>{console.log("someerror"+String(data));});
+		command.stdout?.on("data", async (data) => {
+		vscode.window.showInformationMessage(data);
+			
+			if (data.includes("Product Key")) {
+			const productKey= await vscode.window.showInputBox({prompt:"Product Key"});
+			command.stdin?.write(`${productKey}\r\n`);			
+		} 
+		});
 	}
 
 }

@@ -59,9 +59,16 @@ export class DepNodeProvider implements vscode.TreeDataProvider<Dependency> {
 		//console.log(xhttp.responseText);
 		
 		const filename = `${item.label}`.replace(/\s/g,'').replace('.',"_").replace(':',"@");
-		const baseDir = path.join("\\", 'tmp',filename+".xml");
-		console.log(`${baseDir}`);
-		fs.writeFile(`${baseDir}`, xhttp.responseText, function (err) {
+		const baseDir = path.join("\\", 'tmp',filename);
+		if(fs.existsSync(baseDir))
+		{
+			fs.rmdirSync(baseDir);
+		}
+		else
+		{
+			fs.mkdirSync(baseDir);
+		}
+		fs.writeFile(path.join(baseDir,'edgesoftware_configuration.xml'), xhttp.responseText, function (err) {
 			if (err)
 			{
 				vscode.window.showErrorMessage(`${item.label} pull failed`);
