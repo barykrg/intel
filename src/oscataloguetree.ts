@@ -1,6 +1,7 @@
 import * as vscode from 'vscode';
 import * as path from 'path';
 import * as fs from 'fs';
+import * as cp from 'child_process';
 export class DepNodeProvider implements vscode.TreeDataProvider<Dependency> {
   private _onDidChangeTreeData: vscode.EventEmitter<Dependency | undefined | null | void> = new vscode.EventEmitter<Dependency | undefined | null | void>();
   readonly onDidChangeTreeData: vscode.Event<Dependency | undefined | null | void> = this._onDidChangeTreeData.event;	
@@ -43,9 +44,9 @@ export class DepNodeProvider implements vscode.TreeDataProvider<Dependency> {
 	}
 	public pull(item:Dependency)
 	{
-		vscode.window.showInformationMessage(`Pull ${item.label} successfull`);
-		const foldername = item.label;
-		const pathToXML = path.join("\\","tmp",foldername);
+		
+		const foldername = item.label.replace(":","@");
+		const pathToXML = path.join("/","tmp",foldername);
 		const command = cp.exec(`cd ${pathToXML} && /home/barun/test/edgesoftware install`);
 		command.on('error',(error)=>{console.log("someerror"+error);});
 		command.stderr?.on('data',(data)=>{console.log("someerror"+String(data));});
@@ -54,7 +55,9 @@ export class DepNodeProvider implements vscode.TreeDataProvider<Dependency> {
 			
 			if (data.includes("Product Key")) {
 			const productKey= await vscode.window.showInputBox({prompt:"Product Key"});
-			command.stdin?.write(`${productKey}\r\n`);			
+			command.stdin?.write(`${productKey}\r\n`);
+			vscode.window.showInformationMessage(`Pull ${item.label} successfull`);
+			return;			
 		} 
 		});
 	}

@@ -58,8 +58,8 @@ export class DepNodeProvider implements vscode.TreeDataProvider<Dependency> {
 		xhttp.send(null);
 		//console.log(xhttp.responseText);
 		
-		const filename = `${item.label}`.replace(/\s/g,'').replace('.',"_").replace(':',"@");
-		const baseDir = path.join("\\", 'tmp',filename);
+		const filename = `${item.label}`.replace(' ','').replace('.',"_").replace(':',"@");
+		const baseDir = path.join("/", 'tmp',filename);
 		if(fs.existsSync(baseDir))
 		{
 			fs.rmdirSync(baseDir);
