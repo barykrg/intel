@@ -51,7 +51,7 @@ export class DepNodeProvider implements vscode.TreeDataProvider<Dependency> {
 		command.on('error',(error)=>{console.log("someerror"+error);});
 		command.stderr?.on('data',(data)=>{console.log("someerror"+String(data));});
 		command.stdout?.on("data", async (data) => {
-		vscode.window.showInformationMessage(data);
+		// vscode.window.showInformationMessage(data);
 			
 			if (data.includes("Product Key")) {
 			const productKey= await vscode.window.showInputBox({prompt:"Product Key"});
