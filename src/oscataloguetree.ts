@@ -32,7 +32,7 @@ export class DepNodeProvider implements vscode.TreeDataProvider<Dependency> {
 			console.log(i);
 			if(fs.existsSync(path.join("/tmp",i,"edgesoftware_configuration.xml")))
 			{
-				const name = i.replace("@",":");
+				const name = i.replace("@",":").replace('_',".");
 				recipe.push(new Dependency(name,'OSRecipe'));
 			}
 		}
@@ -45,7 +45,7 @@ export class DepNodeProvider implements vscode.TreeDataProvider<Dependency> {
 	public pull(item:Dependency)
 	{
 		
-		const foldername = item.label.replace(":","@");
+		const foldername = item.label.replace(":","@").replace(".","_");
 		const pathToXML = path.join("/","tmp",foldername);
 		const command = cp.exec(`cd ${pathToXML} && /home/barun/test/edgesoftware install`);
 		command.on('error',(error)=>{console.log("someerror"+error);});
