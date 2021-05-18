@@ -7,6 +7,8 @@ export class DepNodeProvider implements vscode.TreeDataProvider<Dependency> {
   readonly onDidChangeTreeData: vscode.Event<Dependency | undefined | null | void> = this._onDidChangeTreeData.event;	
   constructor() {
 		console.log('OSTree Made');
+		console.log(__dirname);
+		console.log(__filename);
 	}
 
 	refresh(): void {
@@ -29,7 +31,7 @@ export class DepNodeProvider implements vscode.TreeDataProvider<Dependency> {
 		const recipe = [];
 		for( const i of this.getData())
 		{
-			console.log(i);
+		
 			if(fs.existsSync(path.join("/tmp",i,"edgesoftware_configuration.xml")))
 			{
 				const name = i.replace("@",":").replace('_',".");
@@ -47,7 +49,8 @@ export class DepNodeProvider implements vscode.TreeDataProvider<Dependency> {
 		
 		const foldername = item.label.replace(":","@").replace(".","_");
 		const pathToXML = path.join("/","tmp",foldername);
-		const command = cp.exec(`cd ${pathToXML} && /home/barun/test/edgesoftware install`);
+		const pathToEdgeSoftware = path.join(__filename,"..","..","resources","edgesoftware");
+		const command = cp.exec(`cd ${pathToXML} && ${pathToEdgeSoftware} install`);
 		command.on('error',(error)=>{console.log("someerror"+error);});
 		command.stderr?.on('data',(data)=>{console.log("someerror"+String(data));});
 		command.stdout?.on("data", async (data) => {
