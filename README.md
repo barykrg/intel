@@ -7,13 +7,13 @@
   
 ## Usage
 * Click on pull from the Intel Catalog section, to copy it to your own system. <br>
-![step1](media/step1.png) <br>
+![step1](media/step1.PNG) <br>
 #
 * Click on the particular RI from On System Catalog to get it installed<br>
-![step2](media/step2.png)<br>
+![step2](media/step2.PNG)<br>
 #
 * Enter the product key as sent to you in your mail while you register for the RI on ESH website<br>
-![step3](media/step3.png)<br>
+![step3](media/step3.PNG)<br>
 #
 * Image Pulled Successfully<br>
-![step4](media/step4.png)<br>
+![step4](media/step4.PNG)<br>
