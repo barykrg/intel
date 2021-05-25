@@ -25,7 +25,7 @@ export class DepNodeProvider implements vscode.TreeDataProvider<Dependency> {
 		images.push(new Dependency("Refrerence Implementation","RI",this.getRecipe()));
 		return element===undefined?images:element.children;
 	}
-	
+	//Populates the List of on System Catalogue by check each folder in tmp has a edgesoftware_configuration.xml file
 	public  getRecipe()
 	{
 		const recipe = [];
@@ -44,6 +44,7 @@ export class DepNodeProvider implements vscode.TreeDataProvider<Dependency> {
 	{
 		return fs.readdirSync("/tmp");
 	}
+	//Pulls image using the stored edgesoftware_configuration.xml and the binary ESH present in the package itself
 	public pull(item:Dependency)
 	{
 		

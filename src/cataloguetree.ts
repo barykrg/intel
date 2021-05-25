@@ -38,6 +38,7 @@ export class DepNodeProvider implements vscode.TreeDataProvider<Dependency> {
 		}
 		return recipe;
 	}
+	//pulls the XML data for all the Recipe available from the Service Layer URL
 	public getData()
 	{
 		const url = `http://localhost:8080/recipe`; //A local page
@@ -47,6 +48,7 @@ export class DepNodeProvider implements vscode.TreeDataProvider<Dependency> {
 		xhttp.send();
 		return JSON.parse(xhttp.responseText);
 	}
+	//pulls the XML data for the particular RI and stores the data in edgesoftware_configuration.xml under the folder of the RI name in tmp
 	public pull(item:Dependency)
 	{
 		console.log(`http://localhost:8080/recipe/upgrade/${item.id}?order=installation`);
